@@ -45,8 +45,6 @@ public class BaseModel<T extends BasePresenter> implements LifecycleObserver {
     /**
      * 获取网络请求服务
      *
-     * @param cls
-     * @param <E>
      * @return 网络请求服务
      */
     protected <E> E getService(@NonNull Class<E> cls) {

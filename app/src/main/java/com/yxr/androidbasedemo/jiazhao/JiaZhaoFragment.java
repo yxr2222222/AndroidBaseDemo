@@ -16,7 +16,6 @@ import com.yxr.base.fragment.BaseStatusFragment;
  */
 public class JiaZhaoFragment extends BaseStatusFragment implements IJiaZhaoView {
     private TextView tvContent;
-    private JiaZhaoPresenter jiaZhaoPresenter;
 
     @Override
     protected int contentView() {
@@ -32,17 +31,12 @@ public class JiaZhaoFragment extends BaseStatusFragment implements IJiaZhaoView 
     @Override
     protected void initData() {
         super.initData();
-        jiaZhaoPresenter = new JiaZhaoPresenter(getLifecycle(), this);
+        JiaZhaoPresenter jiaZhaoPresenter = new JiaZhaoPresenter(getLifecycle(), this);
         jiaZhaoPresenter.getJiaZhaoResponse();
     }
 
     @Override
     public void jiaZhaoGetSuccess(@NonNull JiaZhaoResponse response) {
         tvContent.setText(new Gson().toJson(response));
-    }
-
-    @Override
-    public JiaZhaoPresenter getPresenter() {
-        return jiaZhaoPresenter;
     }
 }

@@ -12,6 +12,8 @@ import io.reactivex.disposables.Disposable;
 public interface IHttpListener<T> {
     /**
      * 网络请求开始
+     *
+     * @param disposable rxJava任务
      */
     void onStart(Disposable disposable);
 

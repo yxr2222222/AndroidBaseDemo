@@ -38,7 +38,9 @@ public class HttpManager {
     }
 
     /**
-     * 初始化
+     * 初始化OkHttpClient,retrofit
+     *
+     * @param httpConfig 网络请求配置参数
      */
     public void init(@NonNull HttpConfig httpConfig) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -71,6 +73,7 @@ public class HttpManager {
 
     /**
      * 发起网络请求
+     *
      * @param observable
      * @param subscriber
      * @param <T>

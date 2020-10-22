@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.yxr.base.util.ContextCompatUtil;
 import com.yxr.base.util.ToastUtil;
 import com.yxr.base.view.IBaseUiView;
-import com.yxr.base.widget.UIStatus;
 import com.yxr.base.widget.dialog.DefaultLoadingDialog;
 
 import java.util.List;
@@ -85,51 +84,18 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
         }
     }
 
-    @Override
-    public void showLoading() {
-        changUiStatus(UIStatus.LOADING);
-    }
-
-    @Override
-    public void showContent() {
-        changUiStatus(UIStatus.CONTENT);
-    }
-
-    @Override
-    public void showEmpty() {
-        changUiStatus(UIStatus.EMPTY);
-    }
-
-    @Override
-    public void showNetworkError() {
-        changUiStatus(UIStatus.NETWORK_ERROR);
-    }
-
-    @Override
-    public void showError() {
-        changUiStatus(UIStatus.ERROR);
-    }
-
-    @Override
-    public void changUiStatus(@NonNull UIStatus uiStatus) {
-        switch (uiStatus) {
-            case LOADING:
-                showLoadingDialog();
-                break;
-            default:
-                dismissLoadingDialog();
-                break;
-        }
-    }
-
     /**
      * 展示弹框类型的loading
      */
-    protected void showLoadingDialog() {
+    @Override
+    public void showLoadingDialog() {
         if (activity != null && !activity.isFinishing()) {
             if (loadingDialog == null) {
-                loadingDialog = new DefaultLoadingDialog(activity);
-                loadingDialog.setCanceledOnTouchOutside(false);
+                loadingDialog = createLoadingDialog();
+                if (loadingDialog == null) {
+                    loadingDialog = new DefaultLoadingDialog(activity);
+                    loadingDialog.setCanceledOnTouchOutside(false);
+                }
             }
             loadingDialog.show();
         }
@@ -138,7 +104,8 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
     /**
      * 隐藏弹框loading
      */
-    protected void dismissLoadingDialog() {
+    @Override
+    public void dismissLoadingDialog() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
@@ -230,6 +197,15 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
      */
     protected void initData() {
 
+    }
+
+    /**
+     * 自定义Loading的Dialog
+     *
+     * @return Loading的Dialog
+     */
+    protected DefaultLoadingDialog createLoadingDialog() {
+        return null;
     }
 
     /**

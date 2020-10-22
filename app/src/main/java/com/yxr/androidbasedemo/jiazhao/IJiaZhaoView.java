@@ -2,6 +2,7 @@ package com.yxr.androidbasedemo.jiazhao;
 
 import android.support.annotation.NonNull;
 
+import com.yxr.base.view.IBaseStatusUiView;
 import com.yxr.base.view.IBaseUiView;
 import com.yxr.base.view.IBaseView;
 
@@ -10,7 +11,7 @@ import com.yxr.base.view.IBaseView;
  * @description 描述
  * @date 2020/9/17
  */
-public interface IJiaZhaoView extends IBaseView<JiaZhaoPresenter>, IBaseUiView {
+public interface IJiaZhaoView extends IBaseStatusUiView {
     /**
      * 驾照考题获取成功
      *

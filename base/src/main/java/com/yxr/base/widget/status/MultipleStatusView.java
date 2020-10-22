@@ -1,7 +1,9 @@
-package com.yxr.base.widget;
+package com.yxr.base.widget.status;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +11,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.yxr.base.R;
+import com.yxr.base.widget.TitleBar;
 
 import java.util.ArrayList;
 
 /**
- * 类描述：  一个方便在多种状态切换的view
- * <p>
- * 创建人:   续写经典
- * 创建时间: 2016/1/15 10:20.
+ * 一个方便在多种状态切换的view
  *
  * @author ciba
  */
 public class MultipleStatusView extends RelativeLayout {
-    public final LayoutParams DEFAULT_LAYOUT_PARAMS = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    public static final int STATUS_CONTENT = 0x00;
-    public static final int STATUS_LOADING = 0x01;
-    public static final int STATUS_EMPTY = 0x02;
-    public static final int STATUS_ERROR = 0x03;
-    public static final int STATUS_NO_NETWORK = 0x04;
     private static final int NULL_RESOURCE_ID = -1;
+    public final LayoutParams DEFAULT_LAYOUT_PARAMS = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     private final TitleBar titleBar;
 
     private View mEmptyView;
@@ -41,11 +36,11 @@ public class MultipleStatusView extends RelativeLayout {
     private int mNoNetworkViewResId;
     private int mContentViewResId;
 
-    private int mViewStatus;
+    private UIStatus mUiStatus;
     private LayoutInflater mInflater;
     private OnClickListener mOnRetryClickListener;
 
-    private final ArrayList<Integer> mOtherIds = new ArrayList<>();
+    private final ArrayList<UIStatus> statusTagList = new ArrayList<>();
 
     public MultipleStatusView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -81,19 +76,21 @@ public class MultipleStatusView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        clear(mEmptyView, mLoadingView, mErrorView, mNoNetworkView);
-        mOtherIds.clear();
-        if (null != mOnRetryClickListener) {
+        try {
+            clear(mEmptyView, mLoadingView, mErrorView, mNoNetworkView);
+            statusTagList.clear();
             mOnRetryClickListener = null;
+            mInflater = null;
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        mInflater = null;
     }
 
     /**
      * 获取当前状态
      */
-    public int getViewStatus() {
-        return mViewStatus;
+    public UIStatus getViewStatus() {
+        return mUiStatus;
     }
 
     /**
@@ -103,6 +100,67 @@ public class MultipleStatusView extends RelativeLayout {
      */
     public void setOnRetryClickListener(OnClickListener onRetryClickListener) {
         this.mOnRetryClickListener = onRetryClickListener;
+    }
+
+    /**
+     * 设置加载Ui资源，不设置使用默认样式
+     *
+     * @param layoutResId 加载Ui资源
+     */
+    public void setLoadingLayoutResId(@LayoutRes int layoutResId) {
+        this.mLoadingViewResId = layoutResId;
+    }
+
+    /**
+     * 设置空布局Ui资源，不设置使用默认样式
+     *
+     * @param layoutResId 空布局Ui资源
+     */
+    public void setEmptyLayoutResId(@LayoutRes int layoutResId) {
+        this.mEmptyViewResId = layoutResId;
+    }
+
+    /**
+     * 设置错误Ui资源，不设置使用默认样式
+     *
+     * @param layoutResId 错误Ui资源
+     */
+    public void setErrorLayoutResId(@LayoutRes int layoutResId) {
+        this.mErrorViewResId = layoutResId;
+    }
+
+    /**
+     * 设置网络错误Ui资源，不设置使用默认样式
+     *
+     * @param layoutResId 网络错误Ui资源
+     */
+    public void setNetWorkErrorLayoutResId(@LayoutRes int layoutResId) {
+        this.mEmptyViewResId = layoutResId;
+    }
+
+    /**
+     * 改变当前UI状态
+     *
+     * @param uiStatus 改变后的状态
+     */
+    public void changUiStatus(@NonNull UIStatus uiStatus) {
+        switch (uiStatus) {
+            case LOADING:
+                showLoading();
+                break;
+            case EMPTY:
+                showEmpty();
+                break;
+            case NETWORK_ERROR:
+                showNoNetwork();
+                break;
+            case ERROR:
+                showError();
+                break;
+            default:
+                showContent();
+                break;
+        }
     }
 
     /**
@@ -130,18 +188,18 @@ public class MultipleStatusView extends RelativeLayout {
      */
     public final void showEmpty(View view, ViewGroup.LayoutParams layoutParams) {
         checkNull(view, "Empty view is null!");
-        mViewStatus = STATUS_EMPTY;
+        mUiStatus = UIStatus.EMPTY;
         if (null == mEmptyView) {
             mEmptyView = view;
-            mEmptyView.setTag(mViewStatus);
+            mEmptyView.setTag(mUiStatus);
             View emptyRetryView = mEmptyView.findViewById(R.id.empty_retry_view);
             if (null != mOnRetryClickListener && null != emptyRetryView) {
                 emptyRetryView.setOnClickListener(mOnRetryClickListener);
             }
-            mOtherIds.add(mViewStatus);
+            statusTagList.add(mUiStatus);
             addView(mEmptyView, 0, layoutParams);
         }
-        showViewByTag(mViewStatus);
+        showViewByTag(mUiStatus);
     }
 
     /**
@@ -169,18 +227,18 @@ public class MultipleStatusView extends RelativeLayout {
      */
     public final void showError(View view, ViewGroup.LayoutParams layoutParams) {
         checkNull(view, "Error view is null!");
-        mViewStatus = STATUS_ERROR;
+        mUiStatus = UIStatus.ERROR;
         if (null == mErrorView) {
             mErrorView = view;
-            mErrorView.setTag(mViewStatus);
+            mErrorView.setTag(mUiStatus);
             View errorRetryView = mErrorView.findViewById(R.id.error_retry_view);
             if (null != mOnRetryClickListener && null != errorRetryView) {
                 errorRetryView.setOnClickListener(mOnRetryClickListener);
             }
-            mOtherIds.add(mViewStatus);
+            statusTagList.add(mUiStatus);
             addView(mErrorView, 0, layoutParams);
         }
-        showViewByTag(mViewStatus);
+        showViewByTag(mUiStatus);
     }
 
     /**
@@ -208,14 +266,14 @@ public class MultipleStatusView extends RelativeLayout {
      */
     public final void showLoading(View view, ViewGroup.LayoutParams layoutParams) {
         checkNull(view, "Loading view is null!");
-        mViewStatus = STATUS_LOADING;
+        mUiStatus = UIStatus.LOADING;
         if (null == mLoadingView) {
             mLoadingView = view;
-            mLoadingView.setTag(mViewStatus);
-            mOtherIds.add(mViewStatus);
+            mLoadingView.setTag(mUiStatus);
+            statusTagList.add(mUiStatus);
             addView(mLoadingView, 0, layoutParams);
         }
-        showViewByTag(mViewStatus);
+        showViewByTag(mUiStatus);
     }
 
     /**
@@ -243,25 +301,25 @@ public class MultipleStatusView extends RelativeLayout {
      */
     public final void showNoNetwork(View view, ViewGroup.LayoutParams layoutParams) {
         checkNull(view, "No network view is null!");
-        mViewStatus = STATUS_NO_NETWORK;
+        mUiStatus = UIStatus.NETWORK_ERROR;
         if (null == mNoNetworkView) {
             mNoNetworkView = view;
-            mNoNetworkView.setTag(mViewStatus);
+            mNoNetworkView.setTag(mUiStatus);
             View noNetworkRetryView = mNoNetworkView.findViewById(R.id.no_network_retry_view);
             if (null != mOnRetryClickListener && null != noNetworkRetryView) {
                 noNetworkRetryView.setOnClickListener(mOnRetryClickListener);
             }
-            mOtherIds.add(mViewStatus);
+            statusTagList.add(mUiStatus);
             addView(mNoNetworkView, 0, layoutParams);
         }
-        showViewByTag(mViewStatus);
+        showViewByTag(mUiStatus);
     }
 
     /**
      * 显示内容视图
      */
     public final void showContent() {
-        mViewStatus = STATUS_CONTENT;
+        mUiStatus = UIStatus.CONTENT;
         if (null == mContentView && mContentViewResId != NULL_RESOURCE_ID) {
             mContentView = mInflater.inflate(mContentViewResId, null);
             addView(mContentView, 0, DEFAULT_LAYOUT_PARAMS);
@@ -276,7 +334,7 @@ public class MultipleStatusView extends RelativeLayout {
             if (view == titleBar) {
                 continue;
             }
-            view.setVisibility(mOtherIds.contains(view.getTag()) ? View.GONE : View.VISIBLE);
+            view.setVisibility(statusTagList.contains(view.getTag()) ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -284,17 +342,17 @@ public class MultipleStatusView extends RelativeLayout {
         return mInflater.inflate(layoutId, null);
     }
 
-    private void showViewByTag(int tag) {
+    private void showViewByTag(UIStatus tag) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = getChildAt(i);
             if (view == titleBar) {
                 continue;
             }
-            int viewTagInt = 0;
+            UIStatus viewTagInt = UIStatus.CONTENT;
             Object viewTag = view.getTag();
-            if (viewTag instanceof Integer) {
-                viewTagInt = (int) viewTag;
+            if (viewTag instanceof UIStatus) {
+                viewTagInt = (UIStatus) viewTag;
             }
             view.setVisibility(viewTagInt == tag ? View.VISIBLE : View.GONE);
         }
