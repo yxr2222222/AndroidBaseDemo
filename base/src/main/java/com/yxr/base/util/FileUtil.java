@@ -3,11 +3,13 @@ package com.yxr.base.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -107,15 +109,17 @@ public class FileUtil {
      *
      * @param context  上下文
      * @param fileName 文件名
-     * @return
+     * @return 内容
      */
     public static String readFromAsset(Context context, String fileName) {
         String result = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream inputStream = null;
+        BufferedInputStream bufferedInputStream = null;
         try {
             AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open(fileName);
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+            inputStream = assetManager.open(fileName);
+            bufferedInputStream = new BufferedInputStream(inputStream);
             byte[] buffer = new byte[1024];
             int len;
             while ((len = bufferedInputStream.read(buffer)) != -1) {
@@ -125,9 +129,36 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            closeQuietly(baos);
+            closeQuietly(baos, inputStream, bufferedInputStream);
         }
         return result;
+    }
+
+    /**
+     * 从文件中读取内容
+     *
+     * @param filePath 文件完整地址
+     * @return 文件内容
+     */
+    public static String readFile(@NonNull String filePath) {
+        StringBuilder sb = new StringBuilder("");
+        File file = new File(filePath);
+        //打开文件输入流
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            byte[] buffer = new byte[1024];
+            int len = inputStream.read(buffer);
+            while (len > 0) {
+                sb.append(new String(buffer, 0, len));
+                len = inputStream.read(buffer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeQuietly(inputStream);
+        }
+        return sb.toString();
     }
 
 }

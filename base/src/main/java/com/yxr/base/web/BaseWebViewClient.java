@@ -11,6 +11,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.yxr.base.util.PackageUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,14 +40,7 @@ public class BaseWebViewClient extends WebViewClient {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        Uri uri = Uri.parse(url);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        activity.startActivity(intent);
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+                    PackageUtil.schemeJump(activity, url);
                 }
             });
         }
