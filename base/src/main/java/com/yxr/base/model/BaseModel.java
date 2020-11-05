@@ -25,10 +25,13 @@ public class BaseModel<T extends BasePresenter> implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        getLifecycle().removeObserver(this);
+        if (lifecycle != null) {
+            lifecycle.removeObserver(this);
+            lifecycle = null;
+        }
+        presenter = null;
     }
 
-    @NonNull
     public Lifecycle getLifecycle() {
         return lifecycle;
     }

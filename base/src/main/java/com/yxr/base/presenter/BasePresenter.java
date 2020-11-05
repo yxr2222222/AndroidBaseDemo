@@ -24,10 +24,13 @@ public class BasePresenter<T extends IBaseView> implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        getLifecycle().removeObserver(this);
+        if (lifecycle != null) {
+            lifecycle.removeObserver(this);
+            lifecycle = null;
+        }
+        view = null;
     }
 
-    @NonNull
     public Lifecycle getLifecycle() {
         return lifecycle;
     }
@@ -37,7 +40,6 @@ public class BasePresenter<T extends IBaseView> implements LifecycleObserver {
      *
      * @return View
      */
-    @NonNull
     public T getView() {
         return view;
     }
