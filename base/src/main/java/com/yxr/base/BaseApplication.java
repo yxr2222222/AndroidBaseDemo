@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.yxr.base.http.HttpConfig;
 import com.yxr.base.http.HttpManager;
+import com.yxr.base.manager.SPManager;
 
 /**
  * @author ciba
@@ -24,6 +25,7 @@ public abstract class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SPManager.getInstance().init(this);
         HttpManager.getInstance().init(getHttpConfig());
     }
 
