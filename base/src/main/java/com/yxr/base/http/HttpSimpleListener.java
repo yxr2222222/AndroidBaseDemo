@@ -24,4 +24,9 @@ public class HttpSimpleListener<T> implements IHttpListener<T> {
     public void onFailed(int code, String message) {
 
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }
