@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.NonNull;
 
+import com.yxr.base.http.HttpManager;
 import com.yxr.base.view.IBaseView;
 
 /**
@@ -42,5 +43,14 @@ public class BasePresenter<T extends IBaseView> implements LifecycleObserver {
      */
     public T getView() {
         return view;
+    }
+
+    /**
+     * 获取网络请求服务
+     *
+     * @return 网络请求服务
+     */
+    protected <E> E getService(@NonNull Class<E> cls) {
+        return HttpManager.getInstance().getRetrofit().create(cls);
     }
 }
