@@ -128,4 +128,8 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
             httpListener.onFailed(code, errorMsg);
         }
     }
+
+    public IHttpListener<T> getHttpListener() {
+        return httpListener;
+    }
 }
