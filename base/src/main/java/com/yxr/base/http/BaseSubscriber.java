@@ -75,7 +75,11 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        httpListener = null;
+        if (httpListener != null){
+            httpListener.onDestroy();
+            httpListener = null;
+        }
+
         try {
             if (lifecycle != null) {
                 lifecycle.removeObserver(this);
@@ -97,7 +101,7 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
      *
      * @param error 访问网络错误
      */
-    private boolean checkNetworkNotError(Throwable error) {
+    protected boolean checkNetworkNotError(Throwable error) {
         if (error instanceof HttpException || error instanceof ConnectException) {
             onFailed(HttpErrorCode.CODE_CONNECT_EXCEPTION, HttpErrorCode.MESSAGE_CONNECT_EXCEPTION);
             return false;
@@ -119,7 +123,7 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
      * @param code     错误码
      * @param errorMsg 错误信息
      */
-    private void onFailed(int code, String errorMsg) {
+    protected void onFailed(int code, String errorMsg) {
         if (httpListener != null) {
             httpListener.onFailed(code, errorMsg);
         }

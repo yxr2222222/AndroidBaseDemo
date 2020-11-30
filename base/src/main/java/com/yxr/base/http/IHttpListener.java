@@ -31,4 +31,6 @@ public interface IHttpListener<T> {
      * @param message 失败错误信息
      */
     void onFailed(int code, String message);
+
+    void onDestroy();
 }
