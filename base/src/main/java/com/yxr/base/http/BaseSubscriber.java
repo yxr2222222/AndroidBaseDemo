@@ -57,7 +57,7 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
         } else if (response.body() == null) {
             onFailed(HttpErrorCode.CODE_NULL_BODY, HttpErrorCode.MESSAGE_NULL_BODY);
         } else if (httpListener != null) {
-            httpListener.onSuccess(response.body());
+            onSuccess(response.body());
         }
     }
 
@@ -75,7 +75,7 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        if (httpListener != null){
+        if (httpListener != null) {
             httpListener.onDestroy();
             httpListener = null;
         }
@@ -118,6 +118,17 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
     }
 
     /**
+     * 网络请求成功
+     *
+     * @param body Response数据
+     */
+    protected void onSuccess(@NonNull T body) {
+        if (httpListener != null) {
+            httpListener.onSuccess(body);
+        }
+    }
+
+    /**
      * 网络请求失败
      *
      * @param code     错误码
@@ -129,7 +140,12 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
         }
     }
 
-    public IHttpListener<T> getHttpListener() {
+    /**
+     * 获取网络监听
+     *
+     * @return 网络监听
+     */
+    protected IHttpListener<T> getHttpListener() {
         return httpListener;
     }
 }
