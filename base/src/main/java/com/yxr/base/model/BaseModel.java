@@ -5,7 +5,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.NonNull;
 
-import com.yxr.base.http.HttpManager;
+import com.yxr.base.http.HttpHelper;
 import com.yxr.base.presenter.BasePresenter;
 
 /**
@@ -13,7 +13,7 @@ import com.yxr.base.presenter.BasePresenter;
  * @description MVP中Model层基类
  * @date 2020/9/17
  */
-public class BaseModel<T extends BasePresenter> implements LifecycleObserver {
+public class BaseModel<T extends BasePresenter> extends HttpHelper implements LifecycleObserver {
     private Lifecycle lifecycle;
     private T presenter;
 
@@ -45,12 +45,4 @@ public class BaseModel<T extends BasePresenter> implements LifecycleObserver {
         return presenter;
     }
 
-    /**
-     * 获取网络请求服务
-     *
-     * @return 网络请求服务
-     */
-    protected <E> E getService(@NonNull Class<E> cls) {
-        return HttpManager.getInstance().getRetrofit().create(cls);
-    }
 }
