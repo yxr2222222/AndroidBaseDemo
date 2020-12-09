@@ -336,11 +336,13 @@ public class TitleBar extends ViewGroup implements View.OnClickListener {
         View view = null;
         if (action instanceof ImageAction) {
             ImageView img = new ImageView(getContext());
-            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img.setPadding(action.getPaddingLeft(), action.getPaddingTop(), action.getPaddingRight(), action.getPaddingBottom());
+            img.setScaleType(((ImageAction) action).getScaleType());
             img.setImageResource(action.getDrawable());
             view = img;
         } else {
             TextView text = new TextView(getContext());
+            text.setPadding(action.getPaddingLeft(), action.getPaddingTop(), action.getPaddingRight(), action.getPaddingBottom());
             text.setGravity(Gravity.CENTER);
             text.setText(action.getText());
             text.setTextSize(DEFAULT_ACTION_TEXT_SIZE);
@@ -350,7 +352,7 @@ public class TitleBar extends ViewGroup implements View.OnClickListener {
             view = text;
         }
 
-        view.setPadding(mActionPadding , mActionPadding, mOutPadding * 2, mActionPadding);
+        view.setPadding(mActionPadding, mActionPadding, mOutPadding * 2, mActionPadding);
         view.setTag(action);
         view.setOnClickListener(this);
         return view;
@@ -414,6 +416,14 @@ public class TitleBar extends ViewGroup implements View.OnClickListener {
      * show.
      */
     public interface Action {
+        int getPaddingLeft();
+
+        int getPaddingTop();
+
+        int getPaddingRight();
+
+        int getPaddingBottom();
+
         String getText();
 
         int getTextColor();
@@ -454,6 +464,30 @@ public class TitleBar extends ViewGroup implements View.OnClickListener {
         public final int getTextColor() {
             return 0;
         }
+
+        @Override
+        public int getPaddingLeft() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingTop() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingRight() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingBottom() {
+            return 0;
+        }
+
+        public ImageView.ScaleType getScaleType() {
+            return ImageView.ScaleType.CENTER_CROP;
+        }
     }
 
     public static abstract class TextAction implements Action {
@@ -478,6 +512,26 @@ public class TitleBar extends ViewGroup implements View.OnClickListener {
         @Override
         public final int getTextColor() {
             return textColor;
+        }
+
+        @Override
+        public int getPaddingLeft() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingTop() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingRight() {
+            return 0;
+        }
+
+        @Override
+        public int getPaddingBottom() {
+            return 0;
         }
     }
 
