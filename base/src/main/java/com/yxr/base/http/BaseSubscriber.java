@@ -32,6 +32,7 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
 
     public BaseSubscriber(@NonNull Lifecycle lifecycle, IHttpListener<T> httpListener) {
         this.lifecycle = lifecycle;
+        this.lifecycle.addObserver(this);
         this.httpListener = httpListener;
     }
 
