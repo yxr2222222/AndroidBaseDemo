@@ -30,10 +30,12 @@ public class FileUtil {
     public static void closeQuietly(Closeable... closeables) {
         if (closeables != null && closeables.length > 0) {
             for (Closeable closeable : closeables) {
-                try {
-                    closeable.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (closeable != null) {
+                    try {
+                        closeable.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -74,22 +76,29 @@ public class FileUtil {
         return isSuccess;
     }
 
+    public static void deleteDirectoryFiles(File root) {
+        deleteDirectoryFiles(root, "");
+    }
+
     /**
      * 删除某个文件下面的所有名称包含conditionPrefix的文件
      *
-     * @param root            文件
-     * @param conditionPrefix
+     * @param root            文件夹
+     * @param conditionPrefix 前缀
      */
     public static void deleteDirectoryFiles(File root, String conditionPrefix) {
-        if (root.isDirectory()) {
-            for (File file : root.listFiles()) {
-                if (file.getName().startsWith(conditionPrefix)) {
-                    file.delete();
+        try {
+            if (root.isDirectory()) {
+                for (File file : root.listFiles()) {
+                    if (file.getName().startsWith(conditionPrefix)) {
+                        file.delete();
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 
     /**
      * 外部存储器是否可用
@@ -159,6 +168,45 @@ public class FileUtil {
             closeQuietly(inputStream);
         }
         return sb.toString();
+    }
+
+    public static String copyAssetsSingleFile(Context context, String outDir, String fileName) {
+        return copyAssetsSingleFile(context, outDir, fileName, true);
+    }
+
+    /**
+     * 复制单个文件
+     *
+     * @param outDir      String 输出文件路径 如：data/user/0/com.test/files
+     * @param fileName    String 要复制的文件名 如：abc.txt
+     * @param replaceFile 如果存在文件是否覆盖替换
+     */
+    public static String copyAssetsSingleFile(Context context, String outDir, String fileName, boolean replaceFile) {
+        File file = new File(outDir);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        File outFile = new File(file, fileName);
+        if (outFile.exists() && !replaceFile) {
+            return outFile.getPath();
+        }
+        try {
+            InputStream inputStream = context.getAssets().open(fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(outFile);
+            // Transfer bytes from inputStream to fileOutputStream
+            byte[] buffer = new byte[1024];
+            int byteRead;
+            while (-1 != (byteRead = inputStream.read(buffer))) {
+                fileOutputStream.write(buffer, 0, byteRead);
+            }
+            inputStream.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            return outFile.getPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
