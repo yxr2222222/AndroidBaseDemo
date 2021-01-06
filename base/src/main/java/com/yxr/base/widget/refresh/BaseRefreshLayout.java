@@ -41,15 +41,15 @@ public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshL
         if (adapter != null) {
             List data = adapter.getData();
             boolean needNotifyDataSetChanged = false;
-            if (adapter.getEmptyLayout() != null && ListUtil.isEmpty(data)) {
-                adapter.setUseEmpty(true);
-                needNotifyDataSetChanged = true;
-            }
             if (!success && refresh && noMoreData) {
                 if (!ListUtil.isEmpty(data)) {
                     data.clear();
                     needNotifyDataSetChanged = true;
                 }
+            }
+            if (adapter.getEmptyLayout() != null && ListUtil.isEmpty(data)) {
+                adapter.setUseEmpty(true);
+                needNotifyDataSetChanged = true;
             }
             if (needNotifyDataSetChanged) {
                 adapter.notifyDataSetChanged();
