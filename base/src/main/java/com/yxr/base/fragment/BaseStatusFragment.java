@@ -1,6 +1,6 @@
 package com.yxr.base.fragment;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -115,6 +115,7 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
      *
      * @return 内容视图
      */
+    @Override
     public View getContentView() {
         return contentView;
     }

@@ -1,7 +1,7 @@
 package com.yxr.androidbasedemo.jiazhao;
 
-import android.arch.lifecycle.Lifecycle;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.annotation.NonNull;
 
 import com.yxr.base.http.HttpSimpleListener;
 import com.yxr.base.presenter.BasePresenter;

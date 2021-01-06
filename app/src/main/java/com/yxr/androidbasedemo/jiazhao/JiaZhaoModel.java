@@ -1,8 +1,8 @@
 package com.yxr.androidbasedemo.jiazhao;
 
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.yxr.base.http.HttpSimpleListener;

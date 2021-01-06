@@ -2,14 +2,20 @@ package com.yxr.base.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.LayoutInflater;
+import android.view.View;
+
+import com.gyf.immersionbar.ImmersionBar;
+import com.yxr.base.R;
+import com.yxr.base.inf.IBaseImmersion;
 import com.yxr.base.util.ContextCompatUtil;
 import com.yxr.base.util.ToastUtil;
 import com.yxr.base.view.IBaseUiView;
@@ -24,13 +30,16 @@ import java.util.List;
  * @date 2020/09/17
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements IBaseUiView {
+public abstract class BaseActivity extends AppCompatActivity implements IBaseUiView, IBaseImmersion {
     private DefaultLoadingDialog loadingDialog;
+    private View contentView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LayoutInflater.from(this).inflate(contentView(), null, false));
+        initImmersion();
+        contentView = LayoutInflater.from(this).inflate(contentView(), null, false);
+        setContentView(contentView);
         // 初始化View
         initView(savedInstanceState);
         // 初始化事件监听
@@ -43,11 +52,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUiV
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         FragmentManager manager = getSupportFragmentManager();
-        if (manager != null) {
-            List<Fragment> fragments = manager.getFragments();
-            for (Fragment fragment : fragments) {
-                fragment.onActivityResult(requestCode, resultCode, data);
-            }
+        List<Fragment> fragments = manager.getFragments();
+        for (Fragment fragment : fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -93,6 +100,48 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUiV
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+    }
+
+    @Override
+    public boolean needImmersion() {
+        return true;
+    }
+
+    @Override
+    public boolean statusBarDarkFont() {
+        return true;
+    }
+
+    @Override
+    public int statusBarColor() {
+        return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    public boolean fitsSystemWindows() {
+        return true;
+    }
+
+    /**
+     * 初始化沉浸式相关
+     */
+    protected void initImmersion() {
+        if (needImmersion()) {
+            ImmersionBar.with(this)
+                    .statusBarColor(statusBarColor())
+                    .statusBarDarkFont(statusBarDarkFont())
+                    .fitsSystemWindows(fitsSystemWindows())
+                    .init();
+        }
+    }
+
+    /**
+     * 获取内容视图
+     *
+     * @return 内容视图
+     */
+    public View getContentView() {
+        return contentView;
     }
 
     /**

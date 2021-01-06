@@ -1,10 +1,8 @@
 package com.yxr.androidbasedemo.jiazhao;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.yxr.base.view.IBaseStatusUiView;
-import com.yxr.base.view.IBaseUiView;
-import com.yxr.base.view.IBaseView;
 
 /**
  * @author ciba

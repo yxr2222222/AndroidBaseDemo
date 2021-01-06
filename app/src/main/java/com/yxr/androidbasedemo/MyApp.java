@@ -1,6 +1,6 @@
 package com.yxr.androidbasedemo;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.yxr.base.BaseApplication;
 import com.yxr.base.http.HttpConfig;

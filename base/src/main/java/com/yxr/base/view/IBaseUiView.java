@@ -1,6 +1,6 @@
 package com.yxr.base.view;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 /**
  * @author ciba

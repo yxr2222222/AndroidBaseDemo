@@ -1,6 +1,6 @@
 package com.yxr.base.http;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.reactivex.Observable;
 import retrofit2.adapter.rxjava2.Result;

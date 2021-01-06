@@ -9,9 +9,9 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "2.1.4"
+        versionName "2.1.5"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -26,10 +26,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api 'com.android.support:appcompat-v7:28.0.0'
-    api 'com.android.support:support-v4:28.0.0'
-    api 'com.android.support:design:28.0.0'
-    api 'com.android.support:multidex:1.0.3'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
+    api 'androidx.multidex:multidex:2.0.0'
 
     api 'com.google.code.gson:gson:2.8.5'
     api 'io.reactivex.rxjava2:rxandroid:2.1.0'
@@ -40,4 +40,13 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     api 'com.squareup.retrofit2:converter-gson:2.4.0'
     api 'com.squareup.okhttp3:logging-interceptor:4.2.0'
+
+    api 'com.youth.banner:banner:2.1.0'
+    api 'com.airbnb.android:lottie:3.6.0'
+    api 'com.gyf.immersionbar:immersionbar:3.0.0'
+    api 'com.makeramen:roundedimageview:2.3.0'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.6'
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
+    // 之后的该三方库时基于RxJava3.0 目前的网络框架都是基于2.0，暂时不要升级
+    api 'com.github.tbruyelle:rxpermissions:0.11'
 }

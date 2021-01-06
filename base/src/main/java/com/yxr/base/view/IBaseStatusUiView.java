@@ -1,6 +1,6 @@
 package com.yxr.base.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.yxr.base.widget.status.UIStatus;
 

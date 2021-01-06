@@ -2,8 +2,8 @@ package com.yxr.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDex;
 
 import com.yxr.base.http.HttpConfig;
 import com.yxr.base.http.HttpManager;
