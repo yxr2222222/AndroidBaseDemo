@@ -9,7 +9,7 @@ import com.yxr.base.util.ListUtil;
 
 import java.util.List;
 
-public class BaseRefreshLayout extends SmartRefreshLayout {
+public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshLayout {
 
     private BaseQuickAdapter adapter;
 
@@ -22,7 +22,7 @@ public class BaseRefreshLayout extends SmartRefreshLayout {
         init();
     }
 
-    public <T extends BaseQuickAdapter> void setAdapter(T adapter) {
+    public void setAdapter(T adapter) {
         this.adapter = adapter;
     }
 
@@ -41,11 +41,11 @@ public class BaseRefreshLayout extends SmartRefreshLayout {
         if (adapter != null) {
             List data = adapter.getData();
             boolean needNotifyDataSetChanged = false;
-            if (adapter.hasEmptyView() && ListUtil.isEmpty(data)) {
+            if (adapter.getEmptyLayout() != null && ListUtil.isEmpty(data)) {
                 adapter.setUseEmpty(true);
                 needNotifyDataSetChanged = true;
             }
-            if (refresh && noMoreData) {
+            if (!success && refresh && noMoreData) {
                 if (!ListUtil.isEmpty(data)) {
                     data.clear();
                     needNotifyDataSetChanged = true;
