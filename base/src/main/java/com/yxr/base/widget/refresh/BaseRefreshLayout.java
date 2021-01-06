@@ -5,11 +5,10 @@ import android.util.AttributeSet;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.yxr.base.util.ListUtil;
 
-public class BaseRefreshLayout extends SmartRefreshLayout {
-    public static final int TYPE_FRESH = 0;
-    public static final int TYPE_LOAD_MORE = 1;
-    private BaseQuickAdapter baseQuickAdapter;
+public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshLayout {
+    private T adapter;
 
     public BaseRefreshLayout(Context context) {
         this(context, null);
@@ -20,34 +19,26 @@ public class BaseRefreshLayout extends SmartRefreshLayout {
         init();
     }
 
-    public static int getFinishType(boolean refresh) {
-        return refresh ? TYPE_FRESH : TYPE_LOAD_MORE;
-    }
-
-    public void setBaseQuickAdapter(BaseQuickAdapter baseQuickAdapter) {
-        this.baseQuickAdapter = baseQuickAdapter;
-    }
-
-    public void finish(boolean refresh, boolean success, boolean noMoreData) {
-        finish(getFinishType(refresh), success, noMoreData);
+    public void setAdapter(T adapter) {
+        this.adapter = adapter;
     }
 
     /**
      * 结束刷新或加载更多
      *
-     * @param type    ：类型
-     * @param success ：获取数据是否成功
+     * @param refresh 是否是刷新
+     * @param success 获取数据是否成功
      */
-    public void finish(int type, boolean success, boolean noMoreData) {
-        if (TYPE_FRESH == type) {
+    public void finish(boolean refresh, boolean success, boolean noMoreData) {
+        if (refresh) {
             finishRefresh(success);
-        } else if (TYPE_LOAD_MORE == type) {
+        } else {
             finishLoadMore(0, success, noMoreData);
         }
-        if (baseQuickAdapter != null) {
-            baseQuickAdapter.setUseEmpty(true);
-            if (!success) {
-                baseQuickAdapter.notifyDataSetChanged();
+        if (adapter != null) {
+            if (adapter.hasEmptyView() && ListUtil.isEmpty(adapter.getData())) {
+                adapter.setUseEmpty(true);
+                adapter.notifyDataSetChanged();
             }
         }
     }
