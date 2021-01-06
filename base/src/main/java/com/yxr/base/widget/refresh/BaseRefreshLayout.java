@@ -9,8 +9,9 @@ import com.yxr.base.util.ListUtil;
 
 import java.util.List;
 
-public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshLayout {
-    private T adapter;
+public class BaseRefreshLayout extends SmartRefreshLayout {
+
+    private BaseQuickAdapter adapter;
 
     public BaseRefreshLayout(Context context) {
         this(context, null);
@@ -21,7 +22,7 @@ public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshL
         init();
     }
 
-    public void setAdapter(T adapter) {
+    public <T extends BaseQuickAdapter> void setAdapter(T adapter) {
         this.adapter = adapter;
     }
 
@@ -32,8 +33,8 @@ public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshL
      * @param success 获取数据是否成功
      */
     public void finish(boolean refresh, boolean success, boolean noMoreData) {
-        if (refresh && !noMoreData) {
-            finishRefresh(success);
+        if (refresh) {
+            finishRefresh(0, success, noMoreData);
         } else {
             finishLoadMore(0, success, noMoreData);
         }
