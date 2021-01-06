@@ -7,6 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yxr.base.util.ListUtil;
 
+import java.util.List;
+
 public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshLayout {
     private T adapter;
 
@@ -30,14 +32,25 @@ public class BaseRefreshLayout<T extends BaseQuickAdapter> extends SmartRefreshL
      * @param success 获取数据是否成功
      */
     public void finish(boolean refresh, boolean success, boolean noMoreData) {
-        if (refresh) {
+        if (refresh && !noMoreData) {
             finishRefresh(success);
         } else {
             finishLoadMore(0, success, noMoreData);
         }
         if (adapter != null) {
-            if (adapter.hasEmptyView() && ListUtil.isEmpty(adapter.getData())) {
+            List data = adapter.getData();
+            boolean needNotifyDataSetChanged = false;
+            if (adapter.hasEmptyView() && ListUtil.isEmpty(data)) {
                 adapter.setUseEmpty(true);
+                needNotifyDataSetChanged = true;
+            }
+            if (refresh && noMoreData) {
+                if (!ListUtil.isEmpty(data)) {
+                    data.clear();
+                    needNotifyDataSetChanged = true;
+                }
+            }
+            if (needNotifyDataSetChanged) {
                 adapter.notifyDataSetChanged();
             }
         }
