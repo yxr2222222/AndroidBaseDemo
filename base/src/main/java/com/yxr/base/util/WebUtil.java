@@ -36,6 +36,7 @@ public class WebUtil {
             // 是否支持viewport属性，默认值 false
             // 页面通过`<meta name="viewport" ... />`自适应手机屏幕
             settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
             // 是否自动加载图片
             settings.setLoadsImagesAutomatically(true);
             // 开启 DOM storage API 功能
