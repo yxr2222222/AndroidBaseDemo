@@ -50,7 +50,7 @@ public class SPManager {
     }
 
     public String getString(String fileName, String key) {
-        return getString(fileName, key, null);
+        return getString(fileName, key, "");
     }
 
     public String getString(String fileName, String key, String defaultValue) {
