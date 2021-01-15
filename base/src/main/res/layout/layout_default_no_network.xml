@@ -12,6 +12,7 @@
         android:src="@drawable/status_default_nonetwork" />
 
     <TextView
+        android:id="@+id/tvRetryHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp36"

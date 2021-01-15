@@ -2,8 +2,10 @@ package com.yxr.base.fragment;
 
 import androidx.annotation.NonNull;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.yxr.base.R;
 import com.yxr.base.view.IBaseStatusUiView;
@@ -21,6 +23,7 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
     private MultipleStatusView msvBaseStatusView;
     private View contentView;
     private DefaultAnimLoadingView animLoadingView;
+    private TextView tvRetryHint;
 
     @Override
     public View inflaterRootView(@NonNull LayoutInflater inflater) {
@@ -76,7 +79,19 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
 
     @Override
     public void showNetworkError() {
+        showNetworkError(null);
+    }
+
+    @Override
+    public void showNetworkError(String hintMessage) {
         changUiStatus(UIStatus.NETWORK_ERROR);
+
+        if (tvRetryHint == null) {
+            tvRetryHint = msvBaseStatusView.findViewById(R.id.tvRetryHint);
+        }
+        if (tvRetryHint != null) {
+            tvRetryHint.setText(TextUtils.isEmpty(hintMessage) ? getString(R.string.load_error_refresh_please) : hintMessage);
+        }
     }
 
     @Override

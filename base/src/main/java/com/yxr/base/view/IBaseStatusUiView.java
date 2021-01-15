@@ -43,6 +43,11 @@ public interface IBaseStatusUiView extends IBaseUiView {
     void showNetworkError();
 
     /**
+     * 展示网络错误数据状态
+     */
+    void showNetworkError(String hintMessage);
+
+    /**
      * 改变UI状态
      *
      * @param uiStatus UI状态
