@@ -54,6 +54,7 @@ public class DefaultAnimLoadingView extends LinearLayout {
         textParams.leftMargin = wh / 2;
         textParams.rightMargin = wh / 2;
         textParams.topMargin = wh / 4;
+        addView(textView, textParams);
     }
 
     public void startLoading() {
