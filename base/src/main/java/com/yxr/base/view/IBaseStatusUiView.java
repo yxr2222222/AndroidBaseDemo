@@ -21,6 +21,13 @@ public interface IBaseStatusUiView extends IBaseUiView {
     void showLoading();
 
     /**
+     * 展示加载中状态
+     *
+     * @param loadingText 加载中文案
+     */
+    void showLoading(String loadingText);
+
+    /**
      * 展示空数据状态UI
      */
     void showEmpty();

@@ -1,11 +1,13 @@
 package com.yxr.base.fragment;
 
 import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yxr.base.R;
 import com.yxr.base.view.IBaseStatusUiView;
+import com.yxr.base.widget.DefaultAnimLoadingView;
 import com.yxr.base.widget.status.MultipleStatusView;
 import com.yxr.base.widget.TitleBar;
 import com.yxr.base.widget.status.UIStatus;
@@ -18,6 +20,7 @@ import com.yxr.base.widget.status.UIStatus;
 public abstract class BaseStatusFragment extends BaseFragment implements IBaseStatusUiView {
     private MultipleStatusView msvBaseStatusView;
     private View contentView;
+    private DefaultAnimLoadingView animLoadingView;
 
     @Override
     public View inflaterRootView(@NonNull LayoutInflater inflater) {
@@ -30,6 +33,7 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
         });
         contentView = LayoutInflater.from(activity).inflate(contentView(), null);
         msvBaseStatusView.addView(contentView, 0, msvBaseStatusView.DEFAULT_LAYOUT_PARAMS);
+        msvBaseStatusView.setLoadingLayoutResId(R.layout.layout_default_anim_loading);
         return msvBaseStatusView;
     }
 
@@ -42,7 +46,22 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
 
     @Override
     public void showLoading() {
+        showLoading(null);
+    }
+
+    @Override
+    public void showLoading(String loadingText) {
         changUiStatus(UIStatus.LOADING);
+        if (animLoadingView == null && msvBaseStatusView != null) {
+            View loadingView = msvBaseStatusView.findViewById(R.id.loadingView);
+            if (loadingView != null && loadingView instanceof DefaultAnimLoadingView) {
+                animLoadingView = (DefaultAnimLoadingView) loadingView;
+            }
+        }
+        if (animLoadingView != null) {
+            animLoadingView.startLoading();
+            animLoadingView.setLoadingText(loadingText);
+        }
     }
 
     @Override
@@ -69,6 +88,9 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
     public void changUiStatus(@NonNull UIStatus uiStatus) {
         if (msvBaseStatusView != null) {
             msvBaseStatusView.changUiStatus(uiStatus);
+        }
+        if (animLoadingView != null && UIStatus.LOADING != uiStatus) {
+            animLoadingView.pauseLoading();
         }
     }
 
@@ -118,5 +140,13 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
     @Override
     public View getContentView() {
         return contentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (animLoadingView != null) {
+            animLoadingView.cancelLoading();
+        }
+        super.onDestroyView();
     }
 }
