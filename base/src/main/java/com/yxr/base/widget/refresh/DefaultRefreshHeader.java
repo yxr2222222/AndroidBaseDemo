@@ -51,7 +51,6 @@ public class DefaultRefreshHeader extends RelativeLayout implements RefreshHeade
         super.onDetachedFromWindow();
         if (lottieAnimationView != null) {
             lottieAnimationView.cancelAnimation();
-            lottieAnimationView = null;
         }
     }
 

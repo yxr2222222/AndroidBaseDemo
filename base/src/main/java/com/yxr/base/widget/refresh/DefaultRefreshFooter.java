@@ -64,7 +64,6 @@ public class DefaultRefreshFooter extends RelativeLayout implements RefreshFoote
         super.onDetachedFromWindow();
         if (lottieAnimationView != null) {
             lottieAnimationView.cancelAnimation();
-            lottieAnimationView = null;
         }
     }
 

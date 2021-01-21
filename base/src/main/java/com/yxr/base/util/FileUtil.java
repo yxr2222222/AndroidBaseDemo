@@ -3,6 +3,7 @@ package com.yxr.base.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import java.io.BufferedInputStream;
@@ -90,7 +91,9 @@ public class FileUtil {
         try {
             if (root.isDirectory()) {
                 for (File file : root.listFiles()) {
-                    if (file.getName().startsWith(conditionPrefix)) {
+                    if (file.isDirectory()) {
+                        deleteDirectoryFiles(file, conditionPrefix);
+                    } else if (file.getName().startsWith(conditionPrefix)) {
                         file.delete();
                     }
                 }
