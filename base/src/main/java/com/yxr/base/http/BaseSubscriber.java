@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 
 import java.net.ConnectException;
@@ -26,13 +27,15 @@ public class BaseSubscriber<T extends BaseResponse> implements Observer<Result<T
     private IHttpListener<T> httpListener;
     private Disposable disposable;
 
-    public BaseSubscriber(@NonNull Lifecycle lifecycle) {
+    public BaseSubscriber(Lifecycle lifecycle) {
         this(lifecycle, null);
     }
 
-    public BaseSubscriber(@NonNull Lifecycle lifecycle, IHttpListener<T> httpListener) {
+    public BaseSubscriber(Lifecycle lifecycle, IHttpListener<T> httpListener) {
         this.lifecycle = lifecycle;
-        this.lifecycle.addObserver(this);
+        if (this.lifecycle != null) {
+            this.lifecycle.addObserver(this);
+        }
         this.httpListener = httpListener;
     }
 

@@ -22,6 +22,9 @@ import com.yxr.base.widget.dialog.DefaultLoadingDialog;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * BaseFragment
  *
@@ -42,6 +45,7 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
     protected boolean dataLoaded;
     private boolean attached;
     private DefaultLoadingDialog loadingDialog;
+    private Unbinder unbinder;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -70,6 +74,7 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
         dismissLoadingDialog();
         loadingDialog = null;
         super.onDestroy();
+        unbindView();
     }
 
     @Override
@@ -140,6 +145,7 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
         if (rootView == null) {
             rootView = inflaterRootView(inflater);
             uiPrepare = true;
+            bindView();
             // 初始化View
             initView(savedInstanceState);
             // 初始化事件监听
@@ -212,6 +218,19 @@ public abstract class BaseFragment extends Fragment implements IBaseUiView {
      */
     protected DefaultLoadingDialog createLoadingDialog() {
         return null;
+    }
+
+    private void bindView() {
+        if (getContentView() != null) {
+            unbinder = ButterKnife.bind(this, getContentView());
+        }
+    }
+
+    private void unbindView() {
+        if (unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 
     /**

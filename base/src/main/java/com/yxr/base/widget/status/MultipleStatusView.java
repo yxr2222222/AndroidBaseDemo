@@ -80,7 +80,6 @@ public class MultipleStatusView extends RelativeLayout {
             clear(mEmptyView, mLoadingView, mErrorView, mNoNetworkView);
             statusTagList.clear();
             mOnRetryClickListener = null;
-            mInflater = null;
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -321,7 +320,7 @@ public class MultipleStatusView extends RelativeLayout {
     public final void showContent() {
         mUiStatus = UIStatus.CONTENT;
         if (null == mContentView && mContentViewResId != NULL_RESOURCE_ID) {
-            mContentView = mInflater.inflate(mContentViewResId, null);
+            mContentView = inflateView(mContentViewResId);
             addView(mContentView, 0, DEFAULT_LAYOUT_PARAMS);
         }
         showContentView();

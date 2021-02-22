@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion 28
 
@@ -9,10 +9,9 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "2.1.16"
+        versionName "2.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -22,18 +21,22 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.appcompat:appcompat:1.2.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
-    api 'com.google.android.material:material:1.0.0'
-    api 'androidx.multidex:multidex:2.0.0'
+    api 'com.google.android.material:material:1.3.0'
+    api 'androidx.multidex:multidex:2.0.1'
 
     api 'com.google.code.gson:gson:2.8.5'
-    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    api 'io.reactivex.rxjava2:rxjava:2.2.0'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.19'
 
     api 'com.github.bumptech.glide:glide:4.9.0'
     api 'com.squareup.retrofit2:retrofit:2.6.2'
@@ -49,4 +52,7 @@ dependencies {
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
     // 之后的该三方库时基于RxJava3.0 目前的网络框架都是基于2.0，暂时不要升级
     api 'com.github.tbruyelle:rxpermissions:0.11'
+
+    api 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }

@@ -23,6 +23,9 @@ import com.yxr.base.widget.dialog.DefaultLoadingDialog;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Activity基类
  *
@@ -33,6 +36,7 @@ import java.util.List;
 public abstract class BaseActivity extends AppCompatActivity implements IBaseUiView, IBaseImmersion {
     private DefaultLoadingDialog loadingDialog;
     private View contentView;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUiV
         initImmersion();
         contentView = LayoutInflater.from(this).inflate(contentView(), null, false);
         setContentView(contentView);
+
+        // bindView()
+        bindView();
+
         // 初始化View
         initView(savedInstanceState);
         // 初始化事件监听
@@ -63,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUiV
         dismissLoadingDialog();
         loadingDialog = null;
         super.onDestroy();
+        unbindView();
     }
 
     @Override
@@ -160,6 +169,25 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUiV
      * 初始化数据
      */
     protected void initData() {
+    }
+
+    /**
+     * 绑定视图
+     */
+    private void bindView() {
+        if (getContentView() != null) {
+            unbinder = ButterKnife.bind(this, getContentView());
+        }
+    }
+
+    /**
+     * 绑定视图
+     */
+    private void unbindView() {
+        if (unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 
     /**
