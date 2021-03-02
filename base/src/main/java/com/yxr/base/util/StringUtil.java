@@ -17,17 +17,22 @@ import java.util.regex.Pattern;
 public class StringUtil {
     /**
      * 手机号号段校验，
-     第1位：1；
-     第2位：{3、4、5、6、7、8}任意数字；
-     第3—11位：0—9任意数字
+     * 第1位：1；
+     * 第2位：{3、4、5、6、7、8}任意数字；
+     * 第3—11位：0—9任意数字
+     *
      * @param value
      * @return
      */
     public static boolean isPhoneNumber(String value) {
-        if (value != null && value.length() == 11) {
-            Pattern pattern = Pattern.compile("^1[3|4|5|6|7|8|9][0-9]\\d{8}$");
-            Matcher matcher = pattern.matcher(value);
-            return matcher.matches();
+        try {
+            if (value != null && value.length() == 11) {
+                Pattern pattern = Pattern.compile("^1[3|4|5|6|7|8|9][0-9]\\d{8}$");
+                Matcher matcher = pattern.matcher(value);
+                return matcher.matches();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -36,22 +41,26 @@ public class StringUtil {
         if (text == null || keyWordClicks == null || tvContent == null) {
             return;
         }
-        SpannableString spannableString = new SpannableString(text);
-        for (KeyWordClick keyWordClick : keyWordClicks) {
-            if (keyWordClick.getKeyWord() == null) {
-                continue;
+        try {
+            SpannableString spannableString = new SpannableString(text);
+            for (KeyWordClick keyWordClick : keyWordClicks) {
+                if (keyWordClick.getKeyWord() == null) {
+                    continue;
+                }
+                Pattern p = Pattern.compile(keyWordClick.getKeyWord());
+                Matcher m = p.matcher(spannableString);
+                while (m.find()) {
+                    int start = m.start();
+                    int end = m.end();
+                    spannableString.setSpan(new CustomKeyWordClickSpan(keyWordClick.getHighLightColor(), keyWordClick.getClickListener()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
-            Pattern p = Pattern.compile(keyWordClick.getKeyWord());
-            Matcher m = p.matcher(spannableString);
-            while (m.find()) {
-                int start = m.start();
-                int end = m.end();
-                spannableString.setSpan(new CustomKeyWordClickSpan(keyWordClick.getHighLightColor(), keyWordClick.getClickListener()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            tvContent.setClickable(true);
+            tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+            tvContent.setText(spannableString);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        tvContent.setClickable(true);
-        tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-        tvContent.setText(spannableString);
     }
 
     public static class KeyWordClick {
