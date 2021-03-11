@@ -23,7 +23,7 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
     protected MultipleStatusView msvBaseStatusView;
     protected View contentView;
     private DefaultAnimLoadingView animLoadingView;
-    private TextView tvRetryHint;
+    private TextView tvRetryHint, tvRetry;
 
     @Override
     public void setContentView(View view) {
@@ -84,6 +84,11 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
 
     @Override
     public void showNetworkError(String hintMessage) {
+        showNetworkError(hintMessage, null);
+    }
+
+    @Override
+    public void showNetworkError(String hintMessage, String retryText) {
         changUiStatus(UIStatus.NETWORK_ERROR);
 
         if (tvRetryHint == null) {
@@ -91,6 +96,15 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
         }
         if (tvRetryHint != null) {
             tvRetryHint.setText(TextUtils.isEmpty(hintMessage) ? getString(R.string.load_error_refresh_please) : hintMessage);
+        }
+
+        if (retryText != null) {
+            if (tvRetry == null) {
+                tvRetry = msvBaseStatusView.findViewById(R.id.no_network_retry_view);
+            }
+            if (tvRetry != null) {
+                tvRetry.setText(retryText);
+            }
         }
     }
 
