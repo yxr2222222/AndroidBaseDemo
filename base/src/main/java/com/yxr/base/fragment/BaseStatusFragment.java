@@ -23,7 +23,7 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
     private MultipleStatusView msvBaseStatusView;
     private View contentView;
     private DefaultAnimLoadingView animLoadingView;
-    private TextView tvRetryHint;
+    private TextView tvRetryHint, tvRetry;
 
     @Override
     public View inflaterRootView(@NonNull LayoutInflater inflater) {
@@ -41,10 +41,9 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
     }
 
     /**
-     * 重新加载数据，默认重新走一遍initData();
+     * 重新加载数据
      */
     protected void reloadData() {
-        initData();
     }
 
     @Override
@@ -84,6 +83,11 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
 
     @Override
     public void showNetworkError(String hintMessage) {
+        showNetworkError(hintMessage, null);
+    }
+
+    @Override
+    public void showNetworkError(String hintMessage, String retryText) {
         changUiStatus(UIStatus.NETWORK_ERROR);
 
         if (tvRetryHint == null) {
@@ -91,6 +95,15 @@ public abstract class BaseStatusFragment extends BaseFragment implements IBaseSt
         }
         if (tvRetryHint != null) {
             tvRetryHint.setText(TextUtils.isEmpty(hintMessage) ? getString(R.string.load_error_refresh_please) : hintMessage);
+        }
+
+        if (retryText != null) {
+            if (tvRetry == null) {
+                tvRetry = msvBaseStatusView.findViewById(R.id.no_network_retry_view);
+            }
+            if (tvRetry != null) {
+                tvRetry.setText(retryText);
+            }
         }
     }
 
