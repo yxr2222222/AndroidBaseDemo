@@ -52,6 +52,8 @@ public class HttpManager {
         OkHttpClient client = builder.connectTimeout(timeout, TimeUnit.SECONDS)
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .readTimeout(timeout, TimeUnit.SECONDS)
+                .sslSocketFactory(httpConfig.getSslSocketFactory(), httpConfig.getX509TrustManager())
+                .hostnameVerifier(httpConfig.getHostnameVerifier())
                 .build();
 
         retrofit = new Retrofit.Builder()
