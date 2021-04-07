@@ -3,6 +3,7 @@ package com.yxr.base.util;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -32,6 +33,33 @@ public class PermissionUtil {
     @SuppressLint("CheckResult")
     public static Disposable checkPermission(@NonNull SimpleConsumer consumer) {
         return new RxPermissions(consumer.getActivity()).request(consumer.getPermissions()).subscribe(consumer);
+    }
+
+    public static void showNoPermissionDialog(Activity activity, String[] permissions) {
+        try {
+            StringBuilder builder = new StringBuilder("以下 【");
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                builder.append(getPermissionName(permission));
+                if (i < permissions.length - 1) {
+                    builder.append(", ");
+                }
+            }
+            builder.append("】权限可能没有授权，没有这些权限将影响部分功能使用，是否前往手动设置？");
+            CancelConfirmDialog cancelConfirmDialog = new CancelConfirmDialog(activity);
+            cancelConfirmDialog.setCancelable(false);
+            cancelConfirmDialog.setCanceledOnTouchOutside(false);
+            cancelConfirmDialog.setContent(builder.toString());
+            cancelConfirmDialog.setCancelConfirmListener(new CancelConfirmDialog.SimpleCancelConfirmListener() {
+                @Override
+                public void onConfirm() {
+                    PackageUtil.jumpSetting(activity);
+                }
+            });
+            cancelConfirmDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getPermissionName(String permission) {
@@ -131,45 +159,10 @@ public class PermissionUtil {
 
         protected void onNoPermission() {
             if (activityWeakReference.get() != null) {
-                StringBuilder builder = new StringBuilder("以下 【");
-                for (int i = 0; i < permissions.length; i++) {
-                    String permission = permissions[i];
-                    builder.append(getPermissionName(permission));
-                    if (i < permissions.length - 1) {
-                        builder.append(", ");
-                    }
-                }
-                builder.append("】权限可能没有授权，没有这些权限将影响部分功能使用，是否前往手动设置？");
-                FragmentActivity activity = activityWeakReference.get();
-                CancelConfirmDialog cancelConfirmDialog = new CancelConfirmDialog(activity);
-                cancelConfirmDialog.setContent(builder.toString());
-                cancelConfirmDialog.setCancelConfirmListener(new CancelConfirmDialog.SimpleCancelConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-                        jump2Setting();
-                    }
-                });
-                cancelConfirmDialog.show();
+                PermissionUtil.showNoPermissionDialog(activityWeakReference.get(), permissions);
             }
         }
 
-        /**
-         * 跳转到权限设置界面
-         */
-        private void jump2Setting() {
-            if (activityWeakReference.get() != null) {
-                try {
-                    FragmentActivity activity = activityWeakReference.get();
-                    Intent intent = new Intent();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                    intent.setData(Uri.fromParts("package", activity.getPackageName(), null));
-                    activity.startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         protected abstract void onHasPermission();
 

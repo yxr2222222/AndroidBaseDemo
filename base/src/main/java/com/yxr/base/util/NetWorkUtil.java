@@ -109,6 +109,20 @@ public class NetWorkUtil {
         return false;
     }
 
+    @SuppressLint("MissingPermission")
+    public static boolean isWifiUseful(Context context) {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                NetworkInfo info = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                return info != null && info.isConnected();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public enum NetworkType {
         /**
          * 未知网络类型

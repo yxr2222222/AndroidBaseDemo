@@ -1,12 +1,16 @@
 package com.yxr.base.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
+
 import android.text.TextUtils;
 
 import java.io.File;
@@ -161,5 +165,17 @@ public class PackageUtil {
             }
         }
         return false;
+    }
+
+    public static void jumpSetting(Activity activity) {
+        try {
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            intent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
