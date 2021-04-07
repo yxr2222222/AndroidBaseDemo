@@ -25,7 +25,6 @@ public class BaseWebChromeClient extends WebChromeClient implements MediaPlayer.
     private ViewGroup mFullScreenContainer;
     private boolean isVideoFullscreen;
     private FrameLayout videoViewContainer;
-    private CustomViewCallback videoViewCallback;
     private ToggledFullscreenCallback toggledFullscreenCallback;
 
     private static final int REQUEST_UPLOAD_FILE_CODE = 12343;
@@ -192,7 +191,6 @@ public class BaseWebChromeClient extends WebChromeClient implements MediaPlayer.
             // Save video related variables
             this.isVideoFullscreen = true;
             this.videoViewContainer = frameLayout;
-            this.videoViewCallback = callback;
             // Hide the non-video view, add the video view, and show it
             mWebViewContainer.setVisibility(View.INVISIBLE);
 
@@ -234,14 +232,8 @@ public class BaseWebChromeClient extends WebChromeClient implements MediaPlayer.
             mFullScreenContainer.removeView(videoViewContainer);
             mWebViewContainer.setVisibility(View.VISIBLE);
 
-            // 全屏返回之后，视频状态不能衔接上，因为onCustomViewHidden很多情况下会奔溃
-            //原因： Call back (only in API level <19, because in API level 19+ with chromium webview it crashes)
-            if (videoViewCallback != null && !videoViewCallback.getClass().getName().contains(".chromium.")) {
-                videoViewCallback.onCustomViewHidden();
-            }
             isVideoFullscreen = false;
             videoViewContainer = null;
-            videoViewCallback = null;
 
             // Notify full-screen change
             if (toggledFullscreenCallback != null) {

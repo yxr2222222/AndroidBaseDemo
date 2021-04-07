@@ -2,7 +2,9 @@ package com.yxr.base.web;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
@@ -21,9 +23,20 @@ public abstract class BaseWebActivity extends BaseStatusActivity {
     public FrameLayout flFullVideoView;
     public static final String WEB_URL = "WEB_URL";
 
+
     @Override
     public int contentView() {
         return R.layout.activity_base_web;
+    }
+
+    @Override
+    public boolean fitsSystemWindows() {
+        return false;
+    }
+
+    @Override
+    public int statusBarColor() {
+        return R.color.transparent;
     }
 
     @Override
@@ -35,6 +48,7 @@ public abstract class BaseWebActivity extends BaseStatusActivity {
     @Override
     public void initData() {
         showTitleBar("");
+        getTitleBar().setImmersive(true);
         WebUtil.initWebView(webView, getWebChromeClient(), getWebViewClient(), new WebViewDownLoadListener(this));
         loadUrl();
     }
@@ -49,7 +63,9 @@ public abstract class BaseWebActivity extends BaseStatusActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
+        if (getWebChromeClient() != null && getWebChromeClient().onBackPressed()) {
+
+        } else if (webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();

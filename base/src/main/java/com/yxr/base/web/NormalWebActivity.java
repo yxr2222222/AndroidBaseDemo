@@ -14,6 +14,9 @@ import android.view.WindowManager;
  */
 
 public class NormalWebActivity extends BaseWebActivity {
+    private BaseWebChromeClient chromeClient;
+    private BaseWebViewClient webViewClient;
+
     public static void start(Context context, String url) {
         if (context != null && !TextUtils.isEmpty(url)) {
             Intent intent = new Intent(context, NormalWebActivity.class);
@@ -22,40 +25,43 @@ public class NormalWebActivity extends BaseWebActivity {
         }
     }
 
-
-
     @Override
     public BaseWebChromeClient getWebChromeClient() {
-        BaseWebChromeClient client = new BaseWebChromeClient((View) webView.getParent(), flFullVideoView, this);
-        client.setOnToggledFullscreen(new BaseWebChromeClient.ToggledFullscreenCallback() {
-            @Override
-            public void toggledFullscreen(boolean fullscreen) {
-                if (fullscreen) {
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                } else {
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (chromeClient == null) {
+            chromeClient = new BaseWebChromeClient((View) webView.getParent(), flFullVideoView, this);
+            chromeClient.setOnToggledFullscreen(new BaseWebChromeClient.ToggledFullscreenCallback() {
+                @Override
+                public void toggledFullscreen(boolean fullscreen) {
+                    if (fullscreen) {
+                        getTitleBar().setVisibility(View.GONE);
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    } else {
+                        getTitleBar().setVisibility(View.VISIBLE);
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
                 }
-            }
 
-            @Override
-            public void getTitle(String title) {
-                if (title == null) {
-                    title = "";
+                @Override
+                public void getTitle(String title) {
+                    if (title == null) {
+                        title = "";
+                    }
+                    if (title.length() > 8) {
+                        title = title.substring(0, 8);
+                    }
+                    showTitleBar(title);
                 }
-                if (title.length() > 8) {
-                    title = title.substring(0, 8);
-                }
-                showTitleBar(title);
-            }
-        });
-        return client;
+            });
+        }
+        return chromeClient;
     }
 
     @Override
     public BaseWebViewClient getWebViewClient() {
-        return new BaseWebViewClient(this);
+        if (webViewClient == null) {
+            webViewClient = new BaseWebViewClient(this);
+        }
+        return webViewClient;
     }
 
     @Override
