@@ -269,7 +269,10 @@ public class Guide implements View.OnKeyListener, View.OnTouchListener {
                             && motionEvent.getX() < targetRect.right
                             && motionEvent.getY() > targetRect.top
                             && motionEvent.getY() < targetRect.bottom) {
-
+                        if (onTargetClickListener != null) {
+                            onTargetClickListener.onTargetClicked();
+                        }
+                        dismiss();
                     }
                 }
             }

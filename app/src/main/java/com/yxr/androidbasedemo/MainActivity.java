@@ -1,6 +1,5 @@
 package com.yxr.androidbasedemo;
 
-import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -8,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.yxr.base.BaseGuide;
 import com.yxr.base.activity.BaseStatusActivity;
 
 import java.util.ArrayList;
@@ -47,6 +47,9 @@ public class MainActivity extends BaseStatusActivity {
                 return fragmentList.size();
             }
         });
+
+        BaseGuide baseGuide = new BaseGuide(this);
+        baseGuide.showGuide(btnClick);
     }
 
     @OnClick(R.id.btnClick)
