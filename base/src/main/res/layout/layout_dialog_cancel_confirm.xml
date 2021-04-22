@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/shape_white_ffffff_radius10"
     android:gravity="center"
     android:orientation="vertical">
@@ -13,9 +14,9 @@
         android:layout_marginLeft="@dimen/dp14"
         android:layout_marginTop="@dimen/dp32"
         android:paddingRight="@dimen/dp14"
-        android:textColor="@color/black_000000"
-        android:textSize="@dimen/sp18"
-        android:textStyle="bold" />
+        tools:text="这是一个标题"
+        android:textColor="@color/black_333333"
+        android:textSize="@dimen/sp14" />
 
     <View
         android:layout_width="match_parent"
@@ -36,9 +37,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="@color/blue_007aff"
-            android:textSize="@dimen/sp18"
-            android:textStyle="bold" />
+            android:textColor="@color/gray_a7a7a7"
+            android:textSize="@dimen/sp14"/>
 
         <View
             android:layout_width="@dimen/dp0_5"
@@ -53,7 +53,6 @@
             android:gravity="center"
             android:text="@string/confirm"
             android:textColor="@color/blue_007aff"
-            android:textSize="@dimen/sp18"
-            android:textStyle="bold" />
+            android:textSize="@dimen/sp14"/>
     </LinearLayout>
 </LinearLayout>
