@@ -3,6 +3,7 @@ package com.yxr.base.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -43,6 +44,13 @@ public class FileUtil {
     }
 
     /**
+     * 文件是否存在
+     */
+    public static boolean fileIsExists(String path) {
+        return !TextUtils.isEmpty(path) && new File(path).exists();
+    }
+
+    /**
      * 保存内容到文件
      *
      * @param path    文件完整路径
@@ -55,17 +63,34 @@ public class FileUtil {
     /**
      * 保存内容到文件
      *
+     * @param path    文件完整路径
+     * @param content 存储内容
+     */
+    public static boolean saveContentToFile(String path, byte[] content) {
+        return saveContentToFile(path, content, false);
+    }
+
+    public static boolean saveContentToFile(String path, String content, boolean isAppend) {
+        if (content == null) {
+            return false;
+        }
+        return saveContentToFile(path, content.getBytes(), isAppend);
+    }
+
+    /**
+     * 保存内容到文件
+     *
      * @param path     文件完整路径
      * @param content  存储内容
      * @param isAppend 是否拼接
      * @return 是否成功
      */
-    public static boolean saveContentToFile(String path, String content, boolean isAppend) {
+    public static boolean saveContentToFile(String path, byte[] content, boolean isAppend) {
         boolean isSuccess = true;
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(new File(path), isAppend);
-            fos.write(content.getBytes());
+            fos.write(content);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
