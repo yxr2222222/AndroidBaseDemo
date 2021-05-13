@@ -1,10 +1,13 @@
 package com.yxr.base.activity;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yxr.base.R;
@@ -124,6 +127,33 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
     }
 
     /**
+     * 获取内容视图
+     *
+     * @return 内容视图
+     */
+    @Override
+    public View getContentView() {
+        return contentView;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (animLoadingView != null) {
+            animLoadingView.cancelLoading();
+        }
+        super.onDestroy();
+    }
+
+    /**
+     * 获取多状态视图
+     *
+     * @return 多状态视图
+     */
+    public MultipleStatusView getStatusView() {
+        return msvBaseStatusView;
+    }
+
+    /**
      * 展示TitleBar
      */
     public void showTitleBar() {
@@ -143,6 +173,25 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
         }
     }
 
+    protected void showTitleBar(boolean immersive
+            , boolean isContentNotBelowTitleBar
+            , int dividerHeight
+            , @ColorInt int backgroundColor
+            , @DrawableRes int leftImageResource
+            , String title) {
+        TitleBar titleBar = getTitleBar();
+        if (titleBar != null) {
+            titleBar.setImmersive(immersive);
+            titleBar.setDividerHeight(dividerHeight);
+            titleBar.setBackgroundColor(backgroundColor);
+            titleBar.setLeftImageResource(leftImageResource);
+            if (isContentNotBelowTitleBar) {
+                getStatusView().DEFAULT_LAYOUT_PARAMS.removeRule(RelativeLayout.BELOW);
+            }
+            showTitleBar(title);
+        }
+    }
+
     /**
      * 获取TitleBar
      *
@@ -150,32 +199,5 @@ public abstract class BaseStatusActivity extends BaseActivity implements IBaseSt
      */
     public TitleBar getTitleBar() {
         return msvBaseStatusView == null ? null : msvBaseStatusView.getTitleBar();
-    }
-
-    /**
-     * 获取多状态视图
-     *
-     * @return 多状态视图
-     */
-    public MultipleStatusView getStatusView() {
-        return msvBaseStatusView;
-    }
-
-    /**
-     * 获取内容视图
-     *
-     * @return 内容视图
-     */
-    @Override
-    public View getContentView() {
-        return contentView;
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (animLoadingView != null) {
-            animLoadingView.cancelLoading();
-        }
-        super.onDestroy();
     }
 }

@@ -5,6 +5,8 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
+
 import com.yxr.base.R;
 import com.yxr.base.util.ContextCompatUtil;
 
@@ -18,6 +20,8 @@ import com.yxr.base.util.ContextCompatUtil;
 
 public class DefaultLoadingDialog extends BaseDialog {
 
+    private int widthHeight;
+
     public DefaultLoadingDialog(Context context) {
         super(context);
     }
@@ -29,21 +33,31 @@ public class DefaultLoadingDialog extends BaseDialog {
 
     @Override
     protected void initView() {
-
+        widthHeight = ContextCompatUtil.getDimen(getContext(), R.dimen.dp72);
     }
 
     @Override
-    protected void setDialogWindow() {
-        Window window = getWindow();
-        if (window != null) {
-            int dimen72 = ContextCompatUtil.getDimen(getContext(), R.dimen.dp72);
-            window.setWindowAnimations(R.style.dialogAlphaAnimal);
-            window.setDimAmount(0);
-            window.setGravity(Gravity.CENTER);
+    protected int getWindowAnimations() {
+        return R.style.dialogAlphaAnimal;
+    }
 
-            ViewGroup.LayoutParams lay = window.getAttributes();
-            lay.width = dimen72;
-            lay.height = dimen72;
-        }
+    @Override
+    protected int getGravity() {
+        return Gravity.CENTER;
+    }
+
+    @Override
+    protected int getWindowWidth() {
+        return widthHeight;
+    }
+
+    @Override
+    protected int getWindowHeight() {
+        return widthHeight;
+    }
+
+    @Override
+    protected void onChildDialogWindow(@NonNull Window window) {
+        window.setDimAmount(0);
     }
 }

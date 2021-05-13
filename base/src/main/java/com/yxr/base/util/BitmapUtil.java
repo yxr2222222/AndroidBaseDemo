@@ -12,6 +12,16 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 public class BitmapUtil {
+    public static Bitmap bytes2Bitmap(byte[] bytes) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     public static Bitmap view2Bitmap(@NonNull View v) {
         try {
             Bitmap bmp = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);

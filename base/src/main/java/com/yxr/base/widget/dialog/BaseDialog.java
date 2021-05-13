@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
+
 import com.yxr.base.R;
 
 
@@ -24,8 +26,6 @@ public abstract class BaseDialog extends Dialog {
         setDialogWindow();
     }
 
-    protected abstract int contentView();
-
     protected void initView() {
 
     }
@@ -38,16 +38,37 @@ public abstract class BaseDialog extends Dialog {
 
     }
 
-    /**
-     * set dialog data with anim and other more
-     */
     protected void setDialogWindow() {
         Window window = getWindow();
         if (window != null) {
-            window.setWindowAnimations(R.style.fromBottomToTopAnimStyle);
-            window.setGravity(Gravity.BOTTOM);
+            window.setWindowAnimations(getWindowAnimations());
+            window.setGravity(getGravity());
             ViewGroup.LayoutParams lay = window.getAttributes();
-            lay.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lay.width = getWindowWidth();
+            lay.height = getWindowHeight();
+            onChildDialogWindow(window);
         }
     }
+
+    protected int getWindowWidth() {
+        return ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+
+    protected int getWindowHeight() {
+        return ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    protected int getWindowAnimations() {
+        return R.style.fromBottomToTopAnimStyle;
+    }
+
+    protected int getGravity() {
+        return Gravity.BOTTOM;
+    }
+
+    protected void onChildDialogWindow(@NonNull Window window) {
+
+    }
+
+    protected abstract int contentView();
 }
